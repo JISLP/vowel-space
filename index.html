@@ -17,8 +17,10 @@
                     <th>모음</th>
                     <th>F1 (정상)</th>
                     <th>F2 (정상)</th>
+                    <th>F3 (정상)</th>
                     <th>F1 (환자)</th>
                     <th>F2 (환자)</th>
+                    <th>F3 (환자)</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,22 +28,28 @@
                     <td>'a'</td>
                     <td>730</td>
                     <td>1090</td>
+                    <td>2440</td>
                     <td><input type="number" id="f1_a_b" required></td>
                     <td><input type="number" id="f2_a_b" required></td>
+                    <td><input type="number" id="f3_a_b" required></td>
                 </tr>
                 <tr>
                     <td>'i'</td>
                     <td>270</td>
                     <td>2290</td>
+                    <td>3010</td>
                     <td><input type="number" id="f1_i_b" required></td>
                     <td><input type="number" id="f2_i_b" required></td>
+                    <td><input type="number" id="f3_i_b" required></td>
                 </tr>
                 <tr>
                     <td>'u'</td>
                     <td>300</td>
                     <td>870</td>
+                    <td>2240</td>
                     <td><input type="number" id="f1_u_b" required></td>
                     <td><input type="number" id="f2_u_b" required></td>
+                    <td><input type="number" id="f3_u_b" required></td>
                 </tr>
             </tbody>
         </table>
@@ -96,17 +104,20 @@
     <script>
         function plotVowelTriangle() {
             // 정상 값
-            const f1_a_a = 730, f2_a_a = 1090;
-            const f1_i_a = 270, f2_i_a = 2290;
-            const f1_u_a = 300, f2_u_a = 870;
+            const f1_a_a = 730, f2_a_a = 1090, f3_a_a = 2440;
+            const f1_i_a = 270, f2_i_a = 2290, f3_i_a = 3010;
+            const f1_u_a = 300, f2_u_a = 870, f3_u_a = 2240;
 
             // 환자 값 입력
             const f1_a_b = parseFloat(document.getElementById("f1_a_b").value);
             const f2_a_b = parseFloat(document.getElementById("f2_a_b").value);
+            const f3_a_b = parseFloat(document.getElementById("f3_a_b").value);
             const f1_i_b = parseFloat(document.getElementById("f1_i_b").value);
             const f2_i_b = parseFloat(document.getElementById("f2_i_b").value);
+            const f3_i_b = parseFloat(document.getElementById("f3_i_b").value);
             const f1_u_b = parseFloat(document.getElementById("f1_u_b").value);
             const f2_u_b = parseFloat(document.getElementById("f2_u_b").value);
+            const f3_u_b = parseFloat(document.getElementById("f3_u_b").value);
 
             // 모음 레이블
             const vowelLabels = ['a', 'i', 'u'];
@@ -114,27 +125,33 @@
             // 정상 데이터
             const f1_A = [f1_a_a, f1_i_a, f1_u_a, f1_a_a];
             const f2_A = [f2_a_a, f2_i_a, f2_u_a, f2_a_a];
+            const f3_A = [f3_a_a, f3_i_a, f3_u_a, f3_a_a];
 
             // 환자 데이터
             const f1_B = [f1_a_b, f1_i_b, f1_u_b, f1_a_b];
             const f2_B = [f2_a_b, f2_i_b, f2_u_b, f2_a_b];
+            const f3_B = [f3_a_b, f3_i_b, f3_u_b, f3_a_b];
 
             // 그래프 데이터 설정
             const normalTrace = {
+                type: 'scatter3d',
                 x: f2_A,
                 y: f1_A,
+                z: f3_A,
                 mode: 'lines+markers+text',
-                name: '정상 모음 삼각형',
+                name: '정상 모음 공간',
                 line: { dash: 'dot', color: 'red' },
                 text: vowelLabels,
                 textposition: 'top right'
             };
 
             const patientTrace = {
+                type: 'scatter3d',
                 x: f2_B,
                 y: f1_B,
+                z: f3_B,
                 mode: 'lines+markers+text',
-                name: '환자 모음 삼각형',
+                name: '환자 모음 공간',
                 line: { color: 'blue' },
                 text: vowelLabels,
                 textposition: 'top right'
@@ -142,11 +159,14 @@
 
             const data = [normalTrace, patientTrace];
             const layout = {
-                title: '모음 삼각형 (정상 vs 환자)',
-                xaxis: { title: 'F2 (Hz)', autorange: 'reversed' },
-                yaxis: { title: 'F1 (Hz)', autorange: 'reversed' },
-                width: 600,
-                height: 600
+                title: '3D 모음 공간 (정상 vs 환자)',
+                scene: {
+                    xaxis: { title: 'F2 (Hz)', autorange: 'reversed' },
+                    yaxis: { title: 'F1 (Hz)', autorange: 'reversed' },
+                    zaxis: { title: 'F3 (Hz)' }
+                },
+                width: 700,
+                height: 700
             };
 
             Plotly.newPlot('plot', data, layout);
